@@ -100,19 +100,19 @@ func (b *FmfwClient) parseTicker(message []byte) ([]*model.Ticker, error) {
 	var newTickerEvent wsTickerMessage
 	err := sonic.Unmarshal(message, &newTickerEvent)
 	if err != nil {
-		b.log.Error("Error unmarshalling ticker message", "error", err.Error())
+		b.log.Error(err.Error())
 		return []*model.Ticker{}, err
 	}
 
+	keys := make([]string, 0, len(newTickerEvent.Data))
+	for k := range newTickerEvent.Data {
+		keys = append(keys, k)
+	}
+
 	tickers := []*model.Ticker{}
-	for key, tickData := range newTickerEvent.Data {
+	for _, key := range keys {
+		tickData := newTickerEvent.Data[key]
 		symbol := model.ParseSymbol(key)
-		
-		// Log raw data for debugging
-		b.log.Debug("Raw ticker data", 
-			"symbol", symbol, 
-			"lastPrice", tickData.LastPrice, 
-			"timestamp", tickData.Timestamp)
 		
 		if tickData.LastPrice == "" {
 			b.log.Warn("Received empty LastPrice",
@@ -121,6 +121,7 @@ func (b *FmfwClient) parseTicker(message []byte) ([]*model.Ticker, error) {
 			continue // Skip this ticker
 		}
 		
+		// Replace the model.NewTicker call with direct struct creation
 		newTicker := &model.Ticker{
 			Symbol:   symbol,
 			Source:   b.GetName(),
@@ -128,6 +129,7 @@ func (b *FmfwClient) parseTicker(message []byte) ([]*model.Ticker, error) {
 			Timestamp: time.UnixMilli(tickData.Timestamp),
 		}
 		
+		// Parse LastPrice separately
 		lastPriceFloat, err := strconv.ParseFloat(tickData.LastPrice, 64)
 		if err != nil {
 			b.log.Error("Error parsing LastPrice",
