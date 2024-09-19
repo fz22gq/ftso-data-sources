@@ -112,6 +112,14 @@ func (b *HitbtcClient) parseTicker(message []byte) ([]*model.Ticker, error) {
 	for _, key := range keys {
 		tickData := newTickerEvent.Data[key]
 		symbol := model.ParseSymbol(key)
+		
+		if tickData.LastPrice == "" {
+			b.log.Warn("Received empty LastPrice",
+				"symbol", symbol,
+				"timestamp", time.UnixMilli(tickData.Timestamp))
+			continue // Skip this ticker
+		}
+		
 		newTicker, err := model.NewTicker(tickData.LastPrice,
 			symbol,
 			b.GetName(),
