@@ -1,0 +1,143 @@
+# set to anything other than 'production' to not panic when this configuration wont produce any data
+env: production
+
+# set log level
+log_level: info # debug, info, warn, error
+
+datasources:
+  - source: binance
+  - source: binance.us
+  - source: bitget
+  - source: bitmart
+  - source: bitrue
+  - source: bitstamp
+  - source: bybit
+  - source: coinbase
+  - source: cryptocom
+  # - source: digifinex
+  - source: fmfw
+  - source: gateio
+  - source: hitbtc
+  - source: huobi
+  - source: kucoin
+  - source: kraken
+  - source: lbank
+  - source: mexc
+  - source: okx
+  - source: toobit
+  - source: whitebit
+  - source: xt
+
+    # - source: tiingo
+    #api_token: <your-api-token>
+    # - source: metalsdev
+    #api_token: <your-api-token>
+    # interval: 90s
+
+  # used for testing, creates one ticker with a random price for a random asset in the assets list
+  # - source: noisy
+  #  name: noisy1
+  #  interval: 1s
+
+# prints the number of tickers per second every [interval] seconds
+stats:
+  enabled: true
+  num_threads: 2
+  interval: 60s
+
+# see https://mqtt.org/
+mqtt:
+  enabled: false
+  url: "tcp://localhost:1883"
+  num_threads: 4
+  use_sbe_encoding: true
+  qos_level: 1
+
+# see https://questdb.io/
+questdb:
+  enabled: false
+  flush_interval: 10s
+  individual_feed_table: false
+  client_options:
+    address: localhost:9000
+    
+# See https://redis.io/docs/latest/develop/data-types/timeseries/
+redis_ts:
+  enabled: false
+  include_stdout: false
+  num_threads: 12
+  ts:
+    retention: 1h
+    chunksize: 2048
+  client_options:
+    initaddress: # list of redis instance or cluster nodes
+      - "127.0.0.1:6379" 
+    username:
+    password:
+
+# append output directly to a file
+file_output:
+  enabled: false
+  filename: tickers.txt
+
+websocket_server:
+  enabled: true
+  # host: 127.0.0.1
+  host: 0.0.0.0
+  port: 9999
+  use_sbe_encoding: false
+  endpoints:
+    tickers: /tickers
+    volumes:
+    
+assets:
+  forex:
+  #  - eur
+  #  - jpy
+  #  - aud
+  commodities:
+  crypto:
+    - ada
+    - algo
+    - arb
+    - atom
+    - avax
+    - bch
+    - bnb
+    - bonk
+    - btc
+    - dai
+    - doge
+    - dot
+    - ena
+    - etc
+    - eth
+    - ethfi
+    - fil
+    - flr
+    - icp
+    - jup
+    - leo
+    - link
+    - ltc
+    - matic
+    - near
+    - pol
+    - pyth
+    - sgb
+    - shib
+    - sol
+    - ton
+    - trx
+    - uni
+    - usdc
+    - usdt
+    - wif
+    - xdc
+    - xlm
+    - xrp
+
+# change the capacity of the internal message buffer
+# change it only if you experience performance issues
+# (expected to happen only with thousands of messages per second)
+message_buffer_size: 65536
