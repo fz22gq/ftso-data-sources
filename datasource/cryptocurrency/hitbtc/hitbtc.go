@@ -14,6 +14,7 @@ import (
 	"roselabs.mx/ftso-data-sources/internal"
 	"roselabs.mx/ftso-data-sources/model"
 	"roselabs.mx/ftso-data-sources/symbols"
+	"strconv"
 )
 
 type HitbtcClient struct {
@@ -120,15 +121,23 @@ func (b *HitbtcClient) parseTicker(message []byte) ([]*model.Ticker, error) {
 			continue // Skip this ticker
 		}
 		
-		newTicker, err := model.NewTicker(tickData.LastPrice,
-			symbol,
-			b.GetName(),
-			time.UnixMilli(tickData.Timestamp))
-		if err != nil {
-			b.log.Error("Error parsing ticker",
-				"ticker", newTicker, "error", err.Error())
-			continue
+		newTicker := &model.Ticker{
+			Symbol:   symbol,
+			Source:   b.GetName(),
+			LastPrice: tickData.LastPrice,
+			Timestamp: time.UnixMilli(tickData.Timestamp),
 		}
+		
+		lastPriceFloat, err := strconv.ParseFloat(tickData.LastPrice, 64)
+		if err != nil {
+			b.log.Error("Error parsing LastPrice",
+				"symbol", symbol,
+				"lastPrice", tickData.LastPrice,
+				"error", err.Error())
+			continue // Skip this ticker
+		}
+		newTicker.LastPriceFloat64 = lastPriceFloat
+		
 		tickers = append(tickers, newTicker)
 	}
 
