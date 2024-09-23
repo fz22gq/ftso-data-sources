@@ -9,7 +9,7 @@ services:
     volumes:
       - ./config.yaml:/app/config.yaml
     networks:
-      - lightftso-testing
+      - ftsoau
     environment:
       - ENV=production
 
@@ -30,7 +30,7 @@ services:
   #     - REDISTIMESERIES_ARGS="RETENTION_POLICY=86400000"
   #     #- REDISBLOOM_ARGS=""
   #   networks:
-  #     - lightftso-testing
+  #     - ftsoau
 
   # mosquitto:
   #   image: eclipse-mosquitto:latest
@@ -44,7 +44,7 @@ services:
   #     - ./mosquitto/storage/data:/mosquitto/data
   #     - ./mosquitto/storage/log:/mosquitto/log
   #   networks:
-  #     - lightftso-testing
+  #     - ftsoau
 
   # questdb:
   #   image: questdb/questdb:latest
@@ -58,7 +58,7 @@ services:
   #   volumes:
   #     - ./questdb:/root/.questdb
   #   networks:
-  #     - lightftso-testing
+  #     - ftsoau
   #   environment:
   #     - QDB_LOG_W_STDOUT_LEVEL=ERROR
   #     - QDB_LOG_W_FILE_LEVEL=ERROR
@@ -73,4 +73,4 @@ services:
   #     - QBD_LINE_UDP_ENABLED=false # Disable influxdb udp server
 
 networks:
-  lightftso-testing:
+  ftsoau:

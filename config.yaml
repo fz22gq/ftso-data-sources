@@ -14,7 +14,7 @@ datasources:
   - source: bybit
   - source: coinbase
   - source: cryptocom
-  # - source: digifinex
+  - source: digifinex
   - source: fmfw
   - source: gateio
   - source: hitbtc
