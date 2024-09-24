@@ -2,7 +2,7 @@
 env: production
 
 # set log level
-log_level: info # debug, info, warn, error
+log_level: debug # debug, info, warn, error
 
 datasources:
   - source: binance
@@ -14,7 +14,7 @@ datasources:
   - source: bybit
   - source: coinbase
   - source: cryptocom
-  - source: digifinex
+  # - source: digifinex
   - source: fmfw
   - source: gateio
   - source: hitbtc
