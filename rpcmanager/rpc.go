@@ -194,8 +194,6 @@ func (m *RPCManager) ReloadDataSources(args struct{}, reply *DataSourceReply) er
 
 // Initialize data sources from the global configuration
 func (m *RPCManager) InitDataSources() error {
-	//allDataSources := datasource.AllDataSources()
-
 	enabledDataSources := m.GlobalConfig.Datasources
 
 	if len(enabledDataSources) < 1 {
@@ -205,25 +203,24 @@ func (m *RPCManager) InitDataSources() error {
 		log.Println("Warning: No data sources enabled, where will get the data from?")
 	}
 
+	symbols := symbols.GetAllSymbols(m.getAssetList().Crypto, m.getAssetList().Commodities, m.getAssetList().Forex, m.getAssetList().Stocks)
+
 	for _, source := range enabledDataSources {
-		symbols := symbols.GetAllSymbols(m.getAssetList().Crypto, m.getAssetList().Commodities, m.getAssetList().Forex, m.getAssetList().Stocks)
 		src, err := datasource.BuilDataSource(source, symbols, m.TickerTopic, &m.Wg)
 		if err != nil {
 			log.Printf("Error creating data source %s: %v", source.Source, err)
 			continue
 		}
 		m.DataSources[src.GetName()] = src
-	}
-	for _, source := range enabledDataSources {
-		m.Wg.Add(1)
 
+		m.Wg.Add(1)
 		go func(ds datasource.FtsoDataSource) {
 			defer m.Wg.Done()
 			err := ds.Connect()
 			if err != nil {
 				log.Printf("Data source %s encountered an error: %v", ds.GetName(), err)
 			}
-		}(m.DataSources[source.Source])
+		}(src)
 	}
 
 	return nil
