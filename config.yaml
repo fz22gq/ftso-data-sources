@@ -97,6 +97,7 @@ assets:
   #  - aud
   commodities:
   crypto:
+    - aave
     - ada
     - algo
     - arb
@@ -113,8 +114,11 @@ assets:
     - etc
     - eth
     - ethfi
+    - fet
     - fil
     - flr
+    - ftm
+    - hnt
     - icp
     - jup
     - leo
@@ -122,11 +126,19 @@ assets:
     - ltc
     - matic
     - near
+    - not
+    - ondo
+    - pepe
     - pol
     - pyth
+    - qnt
+    - render
+    - rune
     - sgb
     - shib
     - sol
+    - sui
+    - tao
     - ton
     - trx
     - uni
